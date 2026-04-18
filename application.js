@@ -5,7 +5,7 @@ import { masterStudios } from "./studios.js";
 let studios = [];
 let selectedTags = [];
 let searchTerm = "";
-let sortBy = "alpha"; // INITIAL SORT SET TO ALPHABETICAL
+let sortBy = "recent";
 let editingId = null;
 
 // ELEMENT REFERENCES
@@ -116,7 +116,7 @@ function render() {
   // INJECT CARDS
   grid.innerHTML = "";
   filtered.forEach((studio) => {
-    const isEditing = editingId === studio.id;
+    const isEditing = editingId === studio.firestoreId;
     const card = document.createElement("div");
     card.className =
       "group relative bg-white rounded-[32px] p-6 border border-stone-100 shadow-sm hover:shadow-2xl card-hover transition-all duration-500 flex flex-col justify-between overflow-hidden min-h-[250px]";
@@ -130,7 +130,7 @@ function render() {
                                 <textarea id="editTags" class="w-full bg-stone-50 p-2 rounded-lg text-xs border border-stone-200 h-20 resize-none font-medium outline-none">${studio.tags.join(", ")}</textarea>
                             </div>
                             <div class="flex gap-2">
-                                <button onclick="saveEdit(${studio.id})" class="flex-1 bg-custom-blue text-white py-2 rounded-xl text-xs font-bold shadow-lg shadow-blue-100 hover-bg-custom-blue transition-colors">Save</button>
+                                <button onclick="saveEdit('${studio.firestoreId}')" class="flex-1 bg-custom-blue text-white py-2 rounded-xl text-xs font-bold shadow-lg shadow-blue-100 hover-bg-custom-blue transition-colors">Save</button>
                                 <button onclick="cancelEdit()" class="flex-1 bg-stone-100 text-stone-500 py-2 rounded-xl text-xs font-bold hover:bg-stone-200 transition-colors">Cancel</button>
                             </div>
                         </div>
@@ -155,10 +155,10 @@ function render() {
                                         <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-custom-blue transform translate-x-2 group-hover:translate-x-0">
                                             <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
                                         </div>
-                                        <button onclick="event.preventDefault(); startEdit(${studio.id})" class="text-stone-300 hover:text-custom-blue p-1.5 relative z-20 transition-all hover:scale-110" title="Edit Studio">
+                                        <button onclick="event.preventDefault(); startEdit('${studio.firestoreId}')" class="text-stone-300 hover:text-custom-blue p-1.5 relative z-20 transition-all hover:scale-110" title="Edit Studio">
                                             <i data-lucide="pencil" class="w-4 h-4"></i>
                                         </button>
-                                        <button onclick="event.preventDefault(); deleteStudio(${studio.id})" class="text-stone-300 hover:text-red-500 p-1.5 relative z-20 transition-all hover:scale-110" title="Remove from vault">
+                                        <button onclick="event.preventDefault(); deleteStudio('${studio.firestoreId}')" class="text-stone-300 hover:text-red-500 p-1.5 relative z-20 transition-all hover:scale-110" title="Remove from vault">
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
                                     </div>
@@ -228,15 +228,15 @@ function renderTagList() {
 }
 
 // ACTION HANDLERS
-window.startEdit = (id) => {
-  editingId = id;
+window.startEdit = (firestoreId) => {
+  editingId = firestoreId;
   render();
 };
 window.cancelEdit = () => {
   editingId = null;
   render();
 };
-window.saveEdit = async (id) => {
+window.saveEdit = async (firestoreId) => {
   const title = document.getElementById("editName").value;
   const url = document.getElementById("editUrl").value;
   const tags = document
@@ -244,20 +244,17 @@ window.saveEdit = async (id) => {
     .value.split(",")
     .map((t) => t.trim())
     .filter((t) => t);
-  const studio = studios.find((s) => s.id === id);
-  if (studio?.firestoreId) {
-    await editLink(studio.firestoreId, title, url, tags);
-  }
-  studios = studios.map((s) => (s.id === id ? { ...s, title, url, tags } : s));
+  await editLink(firestoreId, title, url, tags);
+  studios = studios.map((s) =>
+    s.firestoreId === firestoreId ? { ...s, title, url, tags } : s,
+  );
   editingId = null;
   render();
 };
-window.deleteStudio = async (id) => {
-  const studio = studios.find((s) => s.id === id);
-  if (studio?.firestoreId) {
-    await deleteLink(studio.firestoreId);
-  }
-  studios = studios.filter((s) => s.id !== id);
+window.deleteStudio = async (firestoreId) => {
+  if (!confirm("Remove this studio from the vault?")) return;
+  await deleteLink(firestoreId);
+  studios = studios.filter((s) => s.firestoreId !== firestoreId);
   render();
 };
 
