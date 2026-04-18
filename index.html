@@ -1,41 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Studio Vault</title>
     <!-- Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Chosen Palette: Custom Studio Blue (#0C75DD) -->
-    
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fafaf9; color: #1c1917; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .card-hover:hover { transform: translateY(-8px); }
-        .dropdown-animate { animation: slideDown 0.2s ease-out; }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Custom scrollbar for tag list */
-        #tagList::-webkit-scrollbar { width: 4px; }
-        #tagList::-webkit-scrollbar-track { background: transparent; }
-        #tagList::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 10px; }
-        
-        /* Custom Accent Colors */
-        .text-custom-blue { color: #0C75DD; }
-        .bg-custom-blue { background-color: #0C75DD; }
-        .border-custom-blue { border-color: #0C75DD; }
-        .ring-custom-blue { --tw-ring-color: rgba(12, 117, 221, 0.2); }
-        .hover-bg-custom-blue:hover { background-color: #0a61b9; }
-    </style>
-</head>
-<body class="antialiased min-h-screen">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap"
+      rel="stylesheet"
+    />
 
+    <!-- Chosen Palette: Custom Studio Blue (#0C75DD) -->
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #fafaf9;
+        color: #1c1917;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .card-hover:hover {
+        transform: translateY(-8px);
+      }
+      .dropdown-animate {
+        animation: slideDown 0.2s ease-out;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Custom scrollbar for tag list */
+      #tagList::-webkit-scrollbar {
+        width: 4px;
+      }
+      #tagList::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      #tagList::-webkit-scrollbar-thumb {
+        background: #e7e5e4;
+        border-radius: 10px;
+      }
+
+      /* Custom Accent Colors */
+      .text-custom-blue {
+        color: #0c75dd;
+      }
+      .bg-custom-blue {
+        background-color: #0c75dd;
+      }
+      .border-custom-blue {
+        border-color: #0c75dd;
+      }
+      .ring-custom-blue {
+        --tw-ring-color: rgba(12, 117, 221, 0.2);
+      }
+      .hover-bg-custom-blue:hover {
+        background-color: #0a61b9;
+      }
+    </style>
+  </head>
+  <body class="antialiased min-h-screen">
     <!-- 
         Application Structure Plan: 
         The SPA is designed as an 'Inspiration Dashboard'. 
@@ -45,531 +83,180 @@
     -->
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        <!-- HEADER -->
-        <header class="mb-12 flex flex-col lg:flex-row justify-between items-start gap-8">
-            <div class="flex-1">
-                <div class="flex items-center gap-2 mb-2 text-custom-blue font-bold tracking-tighter uppercase text-sm">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i>
-                    <span>Inspiration Archive</span>
-                </div>
-                <h1 class="text-5xl font-black text-stone-900 tracking-tight">
-                    Studio<span class="text-transparent bg-clip-text bg-gradient-to-r from-[#0C75DD] to-[#3a96f1]">Vault.</span>
-                </h1>
-                <p class="mt-2 text-stone-500 max-w-md text-lg font-medium">
-                    A curated collection of creative.
-                </p>
-            </div>
-
-            <div class="flex flex-col gap-4 w-full md:w-auto md:items-end">
-                <!-- Search Bar -->
-                <div class="relative w-full md:w-64 group">
-                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-custom-blue transition-colors"></i>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search..."
-                        class="w-full pl-11 pr-10 py-3 bg-white border border-stone-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 ring-custom-blue focus:border-custom-blue transition-all text-sm font-medium"
-                    >
-                    <button id="clearSearch" class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-300 hover:text-stone-500 hidden transition-colors">
-                        <i data-lucide="x" class="w-4 h-4"></i>
-                    </button>
-                </div>
-
-                <!-- Add Form -->
-                <div class="flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-2xl shadow-xl border border-stone-100 w-full md:w-auto">
-                    <input
-                        type="text"
-                        id="newStudioName"
-                        placeholder="Studio Name"
-                        class="px-4 py-2 rounded-xl bg-stone-50 focus:outline-none focus:ring-2 ring-custom-blue transition-all text-sm md:w-32 lg:w-40"
-                    >
-                    <input
-                        type="text"
-                        id="newStudioUrl"
-                        placeholder="Paste URL..."
-                        class="px-4 py-2 rounded-xl bg-stone-50 focus:outline-none focus:ring-2 ring-custom-blue transition-all text-sm md:w-40 lg:w-48"
-                    >
-                    <button
-                        id="addStudioBtn"
-                        class="bg-custom-blue hover-bg-custom-blue text-white p-2 rounded-xl transition-all flex items-center justify-center gap-2 px-4 font-semibold text-sm whitespace-nowrap group shadow-lg shadow-blue-100"
-                    >
-                        <i data-lucide="plus" class="w-4 h-4 group-hover:rotate-90 transition-transform"></i>
-                        <span>Add Studio</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- TOOLBAR -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 pb-4 border-b border-stone-200 gap-4">
-            <div class="flex items-center gap-2 text-stone-500 text-sm font-semibold tracking-tight">
-                <i data-lucide="layout-grid" class="w-4 h-4 text-stone-400"></i>
-                <span id="resultCount">0 studios saved</span>
-            </div>
-            
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-                <!-- Multi-Select Categories -->
-                <div class="relative" id="filterDropdownContainer">
-                    <button 
-                        id="filterToggle"
-                        class="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-[11px] font-black uppercase tracking-[0.12em] text-stone-500 transition-all hover:border-custom-blue"
-                    >
-                        <i data-lucide="filter" class="w-3.5 h-3.5 text-stone-400"></i>
-                        <span id="filterLabel">Filter Categories</span>
-                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-stone-400"></i>
-                    </button>
-
-                    <div id="filterMenu" class="absolute right-0 top-full mt-2 w-64 bg-white border border-stone-100 shadow-2xl rounded-2xl z-50 hidden dropdown-animate overflow-hidden">
-                        <div class="p-2 border-b border-stone-50 flex items-center justify-between bg-stone-50/50">
-                            <span class="text-[10px] font-bold text-stone-400 uppercase px-2">Select Types</span>
-                            <button id="clearFilters" class="text-[10px] font-bold text-custom-blue hover:text-custom-blue px-2 transition-colors">Clear All</button>
-                        </div>
-                        <div id="tagList" class="max-h-72 overflow-y-auto py-2 px-2 grid grid-cols-1 gap-1">
-                            <!-- Tags injected via JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sorting -->
-                <div class="relative">
-                    <select
-                        id="sortSelect"
-                        class="appearance-none bg-white border border-stone-200 rounded-xl px-4 pr-10 py-2.5 text-[11px] font-black text-stone-500 uppercase tracking-[0.12em] focus:outline-none focus:ring-2 ring-custom-blue cursor-pointer w-full transition-all hover:border-custom-blue"
-                    >
-                        <option value="alpha">A — Z</option>
-                        <option value="recent">Recently Added</option>
-                    </select>
-                    <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-400 pointer-events-none"></i>
-                </div>
-            </div>
+      <!-- HEADER -->
+      <header
+        class="mb-12 flex flex-col lg:flex-row justify-between items-start gap-8"
+      >
+        <div class="flex-1">
+          <div
+            class="flex items-center gap-2 mb-2 text-custom-blue font-bold tracking-tighter uppercase text-sm"
+          >
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Inspiration Archive</span>
+          </div>
+          <h1 class="text-5xl font-black text-stone-900 tracking-tight">
+            Studio<span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-[#0C75DD] to-[#3a96f1]"
+              >Vault.</span
+            >
+          </h1>
+          <p class="mt-2 text-stone-500 max-w-md text-lg font-medium">
+            A curated collection of creative.
+          </p>
         </div>
 
-        <!-- GRID -->
-        <div id="studioGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Cards injected via JS -->
+        <div class="flex flex-col gap-4 w-full md:w-auto md:items-end">
+          <!-- Search Bar -->
+          <div class="relative w-full md:w-64 group">
+            <i
+              data-lucide="search"
+              class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-custom-blue transition-colors"
+            ></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search..."
+              class="w-full pl-11 pr-10 py-3 bg-white border border-stone-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 ring-custom-blue focus:border-custom-blue transition-all text-sm font-medium"
+            />
+            <button
+              id="clearSearch"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-300 hover:text-stone-500 hidden transition-colors"
+            >
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Add Form -->
+          <div
+            class="flex flex-col sm:flex-row gap-2 bg-white p-2 rounded-2xl shadow-xl border border-stone-100 w-full md:w-auto"
+          >
+            <input
+              type="text"
+              id="newStudioName"
+              placeholder="Studio Name"
+              class="px-4 py-2 rounded-xl bg-stone-50 focus:outline-none focus:ring-2 ring-custom-blue transition-all text-sm md:w-32 lg:w-40"
+            />
+            <input
+              type="text"
+              id="newStudioUrl"
+              placeholder="Paste URL..."
+              class="px-4 py-2 rounded-xl bg-stone-50 focus:outline-none focus:ring-2 ring-custom-blue transition-all text-sm md:w-40 lg:w-48"
+            />
+            <button
+              id="addStudioBtn"
+              class="bg-custom-blue hover-bg-custom-blue text-white p-2 rounded-xl transition-all flex items-center justify-center gap-2 px-4 font-semibold text-sm whitespace-nowrap group shadow-lg shadow-blue-100"
+            >
+              <i
+                data-lucide="plus"
+                class="w-4 h-4 group-hover:rotate-90 transition-transform"
+              ></i>
+              <span>Add Studio</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- TOOLBAR -->
+      <div
+        class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 pb-4 border-b border-stone-200 gap-4"
+      >
+        <div
+          class="flex items-center gap-2 text-stone-500 text-sm font-semibold tracking-tight"
+        >
+          <i data-lucide="layout-grid" class="w-4 h-4 text-stone-400"></i>
+          <span id="resultCount">0 studios saved</span>
         </div>
 
-        <!-- EMPTY STATE -->
-        <div id="emptyState" class="hidden text-center py-32 bg-white rounded-[40px] border-2 border-dashed border-stone-200">
-            <div class="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-400">
-               <i data-lucide="search" class="w-8 h-8"></i>
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <!-- Multi-Select Categories -->
+          <div class="relative" id="filterDropdownContainer">
+            <button
+              id="filterToggle"
+              class="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-[11px] font-black uppercase tracking-[0.12em] text-stone-500 transition-all hover:border-custom-blue"
+            >
+              <i data-lucide="filter" class="w-3.5 h-3.5 text-stone-400"></i>
+              <span id="filterLabel">Filter Categories</span>
+              <i
+                data-lucide="chevron-down"
+                class="w-3.5 h-3.5 text-stone-400"
+              ></i>
+            </button>
+
+            <div
+              id="filterMenu"
+              class="absolute right-0 top-full mt-2 w-64 bg-white border border-stone-100 shadow-2xl rounded-2xl z-50 hidden dropdown-animate overflow-hidden"
+            >
+              <div
+                class="p-2 border-b border-stone-50 flex items-center justify-between bg-stone-50/50"
+              >
+                <span
+                  class="text-[10px] font-bold text-stone-400 uppercase px-2"
+                  >Select Types</span
+                >
+                <button
+                  id="clearFilters"
+                  class="text-[10px] font-bold text-custom-blue hover:text-custom-blue px-2 transition-colors"
+                >
+                  Clear All
+                </button>
+              </div>
+              <div
+                id="tagList"
+                class="max-h-72 overflow-y-auto py-2 px-2 grid grid-cols-1 gap-1"
+              >
+                <!-- Tags injected via JS -->
+              </div>
             </div>
-            <p class="text-stone-400 font-bold text-lg">No results match your filters.</p>
-            <p class="text-stone-300 text-sm mt-1 uppercase tracking-widest font-black">Try clearing your search or filters</p>
+          </div>
+
+          <!-- Sorting -->
+          <div class="relative">
+            <select
+              id="sortSelect"
+              class="appearance-none bg-white border border-stone-200 rounded-xl px-4 pr-10 py-2.5 text-[11px] font-black text-stone-500 uppercase tracking-[0.12em] focus:outline-none focus:ring-2 ring-custom-blue cursor-pointer w-full transition-all hover:border-custom-blue"
+            >
+              <option value="alpha">A — Z</option>
+              <option value="recent">Recently Added</option>
+            </select>
+            <i
+              data-lucide="chevron-down"
+              class="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-400 pointer-events-none"
+            ></i>
+          </div>
         </div>
+      </div>
+
+      <!-- GRID -->
+      <div
+        id="studioGrid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
+        <!-- Cards injected via JS -->
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div
+        id="emptyState"
+        class="hidden text-center py-32 bg-white rounded-[40px] border-2 border-dashed border-stone-200"
+      >
+        <div
+          class="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-400"
+        >
+          <i data-lucide="search" class="w-8 h-8"></i>
+        </div>
+        <p class="text-stone-400 font-bold text-lg">
+          No results match your filters.
+        </p>
+        <p
+          class="text-stone-300 text-sm mt-1 uppercase tracking-widest font-black"
+        >
+          Try clearing your search or filters
+        </p>
+      </div>
     </div>
+  </body>
 
-    <!-- DATA & LOGIC -->
-    <script>
-        // MASTER DATA ARRAY
-        let masterStudios = [
-            { id: 1, url: 'https://isleofany.com', name: 'Isle of Any', tags: ['Creative Studio'] },
-            { id: 2, url: 'https://kuhlandhan.com/', name: 'Kuhl & Han', tags: ['Motion', 'CGI'] },
-            { id: 3, url: 'https://cylndr.com/', name: 'CYLNDR', tags: ['Production'] },
-            { id: 4, url: 'https://www.cartelandco.com/', name: 'Cartel & Co', tags: ['Agency'] },
-            { id: 5, url: 'https://hark.com/', name: 'Hark', tags: ['Strategy', 'Design'] },
-            { id: 6, url: 'https://cotton.design/', name: 'Cotton Design', tags: ['Digital', 'Tech'] },
-            { id: 7, url: 'https://www.instagram.com/ales_santos/', name: 'Ale Santos', tags: ['Art Direction'] },
-            { id: 8, url: 'https://the-brandidentity.com/project/defying-norms-at-21-how-cotton-design-weaves-technology-and-art-into-backslashs-visual-language', name: 'The Brand Identity (Cotton)', tags: ['Editorial'] },
-            { id: 9, url: 'http://resourcela.com', name: 'Resource LA', tags: ['Production'] },
-            { id: 10, url: 'https://pioneer.hu/', name: 'Pioneer', tags: ['Production'] },
-            { id: 11, url: 'http://www.radicalmedia.com/us/directors', name: 'Radical Media', tags: ['Directors'] },
-            { id: 12, url: 'https://www.kimgehrig.com/work', name: 'Kim Gehrig', tags: ['Director'] },
-            { id: 13, url: 'https://iconoclast.tv/us/romain-gavras', name: 'Iconoclast (Romain Gavras)', tags: ['Production'] },
-            { id: 14, url: 'https://allofushere.tv/directors/pleix', name: 'Pleix', tags: ['Collective'] },
-            { id: 15, url: 'https://weareus.co.uk/', name: 'Us', tags: ['Creative'] },
-            { id: 16, url: 'https://www.canadacanada.com/directors/us', name: 'Canada (Us)', tags: ['Production'] },
-            { id: 17, url: 'https://www.instagram.com/julienjdm_banana/', name: 'Julien JDM', tags: ['Social'] },
-            { id: 18, url: 'https://www.youtube.com/@BountyBanana', name: 'Bounty Banana (YT)', tags: ['Video'] },
-            { id: 19, url: 'https://www.instagram.com/bountybanana/', name: 'Bounty Banana (IG)', tags: ['Social'] },
-            { id: 20, url: 'https://www.academyfilms.com/garth-davis', name: 'Academy Films (Garth Davis)', tags: ['Film'] },
-            { id: 21, url: 'https://www.raineallenmiller.com/', name: 'Raine Allen-Miller', tags: ['Director'] },
-            { id: 22, url: 'https://somesuch.co/directors/raineallen-miller', name: 'Somesuch', tags: ['Production'] },
-            { id: 23, url: 'http://furlined.com/us/directors/dougal-wilson', name: 'Furlined (Dougal Wilson)', tags: ['Directing'] },
-            { id: 24, url: 'https://blinkprods.com/talent/dougal-wilson/', name: 'Blink (Dougal Wilson)', tags: ['Production'] },
-            { id: 25, url: 'https://www.serialpictures.com/directors/brthr/', name: 'Serial Pictures (BRTHR)', tags: ['Visuals'] },
-            { id: 26, url: 'http://www.smithandfoulkes.co.uk/', name: 'Smith & Foulkes', tags: ['Animation'] },
-            { id: 27, url: 'https://opositivefilms.com/directors/david-shane', name: 'O Positive (David Shane)', tags: ['Comedy'] },
-            { id: 28, url: 'https://haroldeinstein.com/', name: 'Harold Einstein', tags: ['Director'] },
-            { id: 29, url: 'https://vimeo.com/haroldeinstein', name: 'Harold Einstein (Vimeo)', tags: ['Video'] },
-            { id: 30, url: 'https://www.dantobinsmith.com/', name: 'Dan Tobin Smith', tags: ['Photography'] },
-            { id: 31, url: 'https://benedictredgrove.com/', name: 'Benedict Redgrove', tags: ['Visual Arts'] },
-            { id: 32, url: 'http://www.macpremo.com/', name: 'Mac Premo', tags: ['Art'] },
-            { id: 33, url: 'http://imperial.tv/stacy-wall-s1/', name: 'Imperial (Stacy Wall)', tags: ['Directing'] },
-            { id: 34, url: 'http://creativity-online.com/credits/stacy-wall/2652/1', name: 'Stacy Wall (Credits)', tags: ['Editorial'] },
-            { id: 35, url: 'http://www.laurentbarthelemy.com/', name: 'Laurent Barthelemy', tags: ['Design'] },
-            { id: 36, url: 'https://vimeo.com/warrenfuprojects', name: 'Warren Fu', tags: ['Music Videos'] },
-            { id: 37, url: 'http://www.josephkosinski.com', name: 'Joseph Kosinski', tags: ['Film'] },
-            { id: 38, url: 'http://superprimefilms.com/', name: 'Superprime', tags: ['Commercial'] },
-            { id: 39, url: 'http://imperial.tv/mark-zibert-s1/', name: 'Imperial (Mark Zibert)', tags: ['Production'] },
-            { id: 40, url: 'https://vimeo.com/d2/', name: 'Dimension 2 (Vimeo)', tags: ['Experimental'] },
-            { id: 41, url: 'https://dimension2.com/', name: 'Dimension 2', tags: ['Studio'] },
-            { id: 42, url: 'http://gioacchinopetronicce.com/', name: 'Gioacchino Petronicce', tags: ['Editing'] },
-            { id: 43, url: 'http://michalmarczak.com/', name: 'Michal Marczak', tags: ['Cinematic'] },
-            { id: 44, url: 'http://www.pulsefilms.com/director/michal-marczak/commercials', name: 'Pulse Films', tags: ['Global Production'] },
-            { id: 45, url: 'http://parkpictures.com/chris-wilcha#video-92334969', name: 'Park Pictures', tags: ['Production'] },
-            { id: 46, url: 'https://www.riffrafffilms.tv/directors/david-wilson', name: 'Riff Raff (David Wilson)', tags: ['Directors'] },
-            { id: 47, url: 'http://thisisdavidwilson.com/', name: 'David Wilson', tags: ['Creative'] },
-            { id: 48, url: 'http://prettybird.co/us/talent/creatives/melina-matsoukas/', name: 'Prettybird (Melina Matsoukas)', tags: ['Film'] },
-            { id: 49, url: 'http://hiromurai.com/', name: 'Hiro Murai', tags: ['Director'] },
-            { id: 50, url: 'http://www.megaforce.fr/', name: 'Megaforce', tags: ['Collective'] },
-            { id: 51, url: 'https://www.psyop.com/live-action/', name: 'Psyop', tags: ['Live Action'] },
-            { id: 52, url: 'http://www.iconoclast.tv/usa/we-are-from-la/', name: 'Iconoclast (WAFLA)', tags: ['Directing'] },
-            { id: 53, url: 'https://vimeo.com/wearefromla', name: 'We Are From LA', tags: ['Music Videos'] },
-            { id: 54, url: 'https://www.valentinpetit.fr/', name: 'Valentin Petit', tags: ['Director'] },
-            { id: 55, url: 'https://www.instagram.com/valentinpetit90', name: 'Valentin Petit (IG)', tags: ['Social'] },
-            { id: 56, url: 'https://www.gatewoodcreative.com/', name: 'Gatewood Creative', tags: ['Design'] },
-            { id: 57, url: 'http://www.andrewthomashuang.com/', name: 'Andrew Thomas Huang', tags: ['Visual Art'] },
-            { id: 58, url: 'https://vimeo.com/user1293099', name: 'Andrew Thomas Huang (Vimeo)', tags: ['Video'] },
-            { id: 59, url: 'https://www.instagram.com/andrewthomashuang/', name: 'Andrew Thomas Huang (IG)', tags: ['Social'] },
-            { id: 60, url: 'https://andrewyuyitruong.com/meta-tiger-buffalo', name: 'Andrew Yuyi Truong', tags: ['VFX'] },
-            { id: 61, url: 'https://biscuitfilmworks.com/us/commercial/steve-rogers/', name: 'Biscuit (Steve Rogers)', tags: ['Commercial'] },
-            { id: 62, url: 'https://stinkfilms.com/artist/eliot-rausch/', name: 'Stink Films (Eliot Rausch)', tags: ['Production'] },
-            { id: 63, url: 'https://www.eliotrausch.com/', name: 'Eliot Rausch', tags: ['Director'] },
-            { id: 64, url: 'http://www.resetcontent.com/ian-pons-jewell', name: 'Reset (Ian Pons Jewell)', tags: ['Directing'] },
-            { id: 65, url: 'http://furlined.com/us/directors/henry-hobson/', name: 'Furlined (Henry Hobson)', tags: ['Film'] },
-            { id: 66, url: 'https://vimeo.com/henryhobson', name: 'Henry Hobson (Vimeo)', tags: ['Directing'] },
-            { id: 67, url: 'http://www.henryhobson.co.uk', name: 'Henry Hobson', tags: ['Creative'] },
-            { id: 68, url: 'http://www.antibody.tv/index.html', name: 'Antibody', tags: ['Motion'] },
-            { id: 69, url: 'http://www.ashthorp.com/', name: 'Ash Thorp', tags: ['Visual Development'] },
-            { id: 70, url: 'https://www.altcinc.com/', name: 'Alt.vfx', tags: ['VFX'] },
-            { id: 71, url: 'http://www.imdb.com/name/nm1085959/', name: 'Stacy Wall (IMDb)', tags: ['Credits'] },
-            { id: 72, url: 'http://theselby.com/films/', name: 'The Selby (Films)', tags: ['Lifestyle'] },
-            { id: 73, url: 'http://lernertandsander.com/', name: 'Lernert & Sander', tags: ['Art & Design'] },
-            { id: 74, url: 'https://www.anonymouscontent.com/work/us/directors/anonymous-content/bardia-zeinali/', name: 'Anonymous Content (Bardia)', tags: ['Production'] },
-            { id: 75, url: 'https://www.instagram.com/bardiazeinali/', name: 'Bardia Zeinali', tags: ['Director'] },
-            { id: 76, url: 'http://www.anonymouscontent.com', name: 'Anonymous Content (Home)', tags: ['Production'] },
-            { id: 77, url: 'http://www.anonymouscontent.com/commercials/anonymous/caryfukunaga/commercials/', name: 'Anonymous (Cary Fukunaga)', tags: ['Commercials'] },
-            { id: 78, url: 'http://www.gustavjohansson.com', name: 'Gustav Johansson', tags: ['Director'] },
-            { id: 79, url: 'http://aoifemcardle.com/', name: 'Aoife McArdle', tags: ['Director'] },
-            { id: 80, url: 'https://www.greatbigstory.com/', name: 'Great Big Story', tags: ['Storytelling'] },
-            { id: 81, url: 'http://www.biscuitfilmworks.com/noam-murro.html', name: 'Biscuit (Noam Murro)', tags: ['Commercials'] },
-            { id: 82, url: 'http://www.epochfilms.com/directors/martin-de-thurah/', name: 'Epoch Films (Martin de Thurah)', tags: ['Production'] },
-            { id: 83, url: 'http://dlew.me', name: 'David Lew', tags: ['Design'] },
-            { id: 84, url: 'http://www.finchcompany.com/', name: 'Finch', tags: ['Production'] },
-            { id: 85, url: 'http://www.b-reel.com/', name: 'B-Reel', tags: ['Digital'] },
-            { id: 86, url: 'http://www.kinfolk.com/films/', name: 'Kinfolk (Films)', tags: ['Editorial'] },
-            { id: 87, url: 'https://vimeo.com/mawe', name: 'Mawe (Vimeo)', tags: ['Video'] },
-            { id: 88, url: 'http://beyondmedals.com', name: 'Beyond Medals', tags: ['Media'] },
-            { id: 89, url: 'http://boweking.com/', name: 'Bowe King', tags: ['Creative'] },
-            { id: 90, url: 'http://www.themill.com/portfolio/filter/collection/94/bowe-king', name: 'The Mill (Bowe King)', tags: ['Portfolio'] },
-            { id: 91, url: 'http://www.lucasallendesigns.com/', name: 'Lucas Allen', tags: ['Design'] },
-            { id: 92, url: 'http://kapwa.co/robertino-zambrano-director/', name: 'Kapwa (Robertino Zambrano)', tags: ['Animation'] },
-            { id: 93, url: 'https://www.danperri.com/', name: 'Dan Perri', tags: ['Title Design'] },
-            { id: 94, url: 'https://www.artofthetitle.com/feature/10-women-of-title-design/', name: 'Art of the Title (Women)', tags: ['Editorial'] },
-            { id: 95, url: 'https://www.artofthetitle.com/feature/a-fistful-of-titles-the-westerns-of-iginio/', name: 'Art of the Title (Iginio)', tags: ['Editorial'] },
-            { id: 96, url: 'https://www.gravillisinc.com/', name: 'Gravillis Inc.', tags: ['Branding'] },
-            { id: 97, url: 'https://the-brandidentity.com/', name: 'The Brand Identity', tags: ['Identity'] },
-            { id: 98, url: 'https://the-brandidentity.com/searchfilter=tag_application%3ACustom%20Typeface', name: 'TBI (Custom Type)', tags: ['Typeface'] },
-            { id: 99, url: 'https://the-brandidentity.com/insight/frontify-presents-ragged-edge-and-tilt-discuss-trust-and-tension', name: 'TBI (Insight)', tags: ['Insight'] },
-            { id: 100, url: 'https://industrialcolor.com/', name: 'Industrial Color', tags: ['Production'] },
-            { id: 101, url: 'https://blacksmith.tv/', name: 'Blacksmith', tags: ['VFX', 'Finish'] },
-            { id: 102, url: 'https://artandgraft.com/', name: 'Art&Graft', tags: ['Motion', 'Brand'] },
-            { id: 103, url: 'https://futuredeluxe.com/', name: 'FutureDeluxe', tags: ['Experimental'] },
-            { id: 104, url: 'https://www.extraweg.com/', name: 'Extraweg', tags: ['Digital Art'] },
-            { id: 105, url: 'https://opticalarts.studio/work/projects/bowers-and-wilkins', name: 'Optical Arts', tags: ['Studio'] },
-            { id: 106, url: 'https://houseofparliament.com/', name: 'Parliament', tags: ['VFX'] },
-            { id: 107, url: 'https://www.hellohornet.com/', name: 'Hornet', tags: ['Animation'] },
-            { id: 108, url: 'https://www.kaspernyman.dk/', name: 'Kasper Nyman', tags: ['Director'] },
-            { id: 109, url: 'https://glassworksvfx.com/', name: 'Glassworks', tags: ['VFX'] },
-            { id: 110, url: 'https://dia.tv/', name: 'DIA', tags: ['Branding', 'Motion'] },
-            { id: 111, url: 'https://www.time-based-arts.com/', name: 'Time Based Arts', tags: ['VFX'] },
-            { id: 112, url: 'https://www.alreadybeenchewed.tv/', name: 'Already Been Chewed', tags: ['Motion'] },
-            { id: 113, url: 'https://electrictheatre.tv/', name: 'Electric Theatre', tags: ['Collective'] },
-            { id: 114, url: 'https://bgstr.com/', name: 'Bigstar', tags: ['Design'] },
-            { id: 115, url: 'https://www.weareversus.tv/', name: 'Versus', tags: ['Creative'] },
-            { id: 116, url: 'https://builders-club.com/', name: 'Builders Club', tags: ['Creative'] },
-            { id: 117, url: 'https://www.helloscholar.com/', name: 'Scholar', tags: ['Animation'] },
-            { id: 118, url: 'https://www.psyop.com/', name: 'Psyop (Global)', tags: ['Production'] },
-            { id: 119, url: 'https://gretelny.com/', name: 'Gretel', tags: ['Branding'] },
-            { id: 120, url: 'https://www.never-always.com/', name: 'Never Always', tags: ['Studio'] },
-            { id: 121, url: 'https://shinestudio.com/', name: 'Shine', tags: ['Titles'] },
-            { id: 122, url: 'https://trollback.com/', name: 'Trollback', tags: ['Design'] },
-            { id: 123, url: 'https://www.yuco.com/', name: 'Yu+Co', tags: ['Titles'] },
-            { id: 124, url: 'https://playlist.studio/', name: 'Playlist', tags: ['Creative'] },
-            { id: 125, url: 'http://elastic.tv/', name: 'Elastic', tags: ['Design'] },
-            { id: 126, url: 'https://vimeo.com/104447378', name: 'Elastic (Vimeo)', tags: ['Video'] },
-            { id: 127, url: 'https://brandnewschool.com/work', name: 'Brand New School', tags: ['Creative'] },
-            { id: 128, url: 'https://www.chapeaustudios.com/apple-chapeau', name: 'Chapeau', tags: ['Design'] },
-            { id: 129, url: 'https://www.instagram.com/brutworks/', name: 'Brut', tags: ['Animation'] },
-            { id: 130, url: 'https://flutterfilms.tv/', name: 'Flutter', tags: ['Production'] },
-            { id: 131, url: 'http://kuntzel-deygas.com/', name: 'Kuntzel+Deygas', tags: ['Studio'] },
-            { id: 132, url: 'http://1stavemachine.com', name: '1stAveMachine', tags: ['Production'] },
-            { id: 133, url: 'https://www.mainframe.co.uk/', name: 'Mainframe', tags: ['VFX'] },
-            { id: 134, url: 'http://serialcut.com/', name: 'Serial Cut', tags: ['Image'] },
-            { id: 135, url: 'http://www.brothersmcleod.co.uk/', name: 'Brothers McLeod', tags: ['Animation'] },
-            { id: 136, url: 'http://www.blind.com/work/type/featured/', name: 'Blind', tags: ['Design'] },
-            { id: 137, url: 'http://linetest.tv', name: 'Linetest', tags: ['Production'] },
-            { id: 138, url: 'http://www.josephychan.com', name: 'Joseph Chan', tags: ['Creative'] },
-            { id: 139, url: 'http://www.artonemotion.com', name: 'Art on Emotion', tags: ['Motion'] },
-            { id: 140, url: 'http://mk12.com/MKXII/', name: 'MK12', tags: ['Collective'] },
-            { id: 141, url: 'http://www.laundrymat.tv/work', name: 'Laundry', tags: ['Design'] },
-            { id: 142, url: 'http://www.peterqu.in', name: 'Peter Quinn', tags: ['Motion'] },
-            { id: 143, url: 'https://vimeo.com/albinholmqvist/videos', name: 'Albin Holmqvist', tags: ['Visuals'] },
-            { id: 144, url: 'http://www.meandthebootmaker.com', name: 'The Bootmaker', tags: ['Creative'] },
-            { id: 145, url: 'http://www.tbik-design.com/work', name: 'TBIK', tags: ['Design'] },
-            { id: 146, url: 'http://www.alasdairwillson.com', name: 'Alasdair Willson', tags: ['Visuals'] },
-            { id: 147, url: 'http://www.michaelrigley.com/', name: 'Michael Rigley', tags: ['Design'] },
-            { id: 148, url: 'http://hueandcry.tv', name: 'Hue & Cry', tags: ['Animation'] },
-            { id: 149, url: 'https://www.behance.net/mexicangry', name: 'Mexicangry', tags: ['Creative'] },
-            { id: 150, url: 'http://adsoftheworld.com/creative/jorge_calleja', name: 'Jorge Calleja', tags: ['Director'] },
-            { id: 151, url: 'http://www.mrkaplin.com/', name: 'Mr. Kaplin', tags: ['Design'] },
-            { id: 152, url: 'http://www.shanegriffin.nyc/', name: 'Shane Griffin', tags: ['Director'] },
-            { id: 153, url: 'http://www.sundayafternoon.us/', name: 'Sunday Afternoon', tags: ['Creative'] },
-            { id: 154, url: 'http://www.emanuelecolombo.it', name: 'Emanuele Colombo', tags: ['Motion'] },
-            { id: 155, url: 'http://chips.nyc/', name: 'Chips', tags: ['Creative'] },
-            { id: 156, url: 'https://www.hyejungbae.com/', name: 'Hyejung Bae', tags: ['Design'] },
-            { id: 157, url: 'http://fynng.com/', name: 'Fynn Ng', tags: ['Creative'] },
-            { id: 158, url: 'https://panoply.co.uk/', name: 'Panoply', tags: ['Design'] },
-            { id: 159, url: 'http://encyclopediapictura.com', name: 'Encyclopedia Pictura', tags: ['Film'] },
-            { id: 160, url: 'https://www.cheatit.co/', name: 'Cheat', tags: ['Color'] },
-            { id: 161, url: 'https://www.luxartists.net/artists', name: 'Lux Artists', tags: ['Talent'] },
-            { id: 162, url: 'http://www.lassefrank.com/categories/show_commercials_3', name: 'Lasse Frank', tags: ['Cinematography'] },
-            { id: 163, url: 'http://www.edugrau.com/commercials', name: 'Edu Grau', tags: ['Commercials'] },
-            { id: 164, url: 'http://jdefdp.com/', name: 'J.D.F', tags: ['Creative'] },
-            { id: 165, url: 'http://niklasjohansson.com', name: 'Niklas Johansson', tags: ['Cinematography'] },
-            { id: 166, url: 'http://adamnewportberra.com', name: 'Adam Newport-Berra', tags: ['Director'] },
-            { id: 167, url: 'http://www.christianweber.net', name: 'Christian Weber', tags: ['Photography'] },
-            { id: 168, url: 'https://rinayang.com/', name: 'Rina Yang', tags: ['Cinematography'] },
-            { id: 169, url: 'https://www.adolphoveloso.com/', name: 'Adolpho Veloso', tags: ['Director'] },
-            { id: 170, url: 'https://www.mkoenigswieser.com/', name: 'M. Koenigswieser', tags: ['Director'] },
-            { id: 171, url: 'http://rockpaperscissors.com/', name: 'Rock Paper Scissors', tags: ['Edit'] },
-            { id: 172, url: 'https://www.cartel.tv/editors/leo-scott', name: 'Cartel (Leo Scott)', tags: ['Editorial'] },
-            { id: 173, url: 'http://company3.com/', name: 'Company 3', tags: ['Color'] },
-            { id: 174, url: 'http://www.a52.com/', name: 'A52', tags: ['VFX'] },
-            { id: 175, url: 'http://www.framestore.com/', name: 'Framestore', tags: ['VFX', 'Animation'] },
-            { id: 176, url: 'http://www.natashanewmanthomas.com/', name: 'Natasha Newman-Thomas', tags: ['Styling'] },
-            { id: 177, url: 'http://heyhush.com/work/', name: 'Hush', tags: ['Design'] },
-            { id: 178, url: 'http://silasveta.com/work', name: 'Sila Sveta', tags: ['Media'] },
-            { id: 179, url: 'http://www.barbecue-design.de', name: 'Barbecue', tags: ['Design'] },
-            { id: 180, url: 'http://jonpasang.com/', name: 'Jon Pasang', tags: ['Creative'] },
-            { id: 181, url: 'http://www.w0w.co.jp/en/works/', name: 'WOW', tags: ['Visual Design'] },
-            { id: 182, url: 'http://gmunk.com/BOX-DEMO', name: 'GMUNK (BOX)', tags: ['Creative'] },
-            { id: 183, url: 'http://www.ryojiikeda.com/', name: 'Ryoji Ikeda', tags: ['Sound/Visual'] },
-            { id: 184, url: 'https://www.nowness.com/story/son-lux-breathe-out-adrian-moyse-junta', name: 'Son Lux (Adrian Moyse)', tags: ['Director'] },
-            { id: 185, url: 'http://www.triplewidemedia.com/2015/02/2015-super-bowl-halftime-show/', name: 'TripleWide', tags: ['Projection'] },
-            { id: 186, url: 'http://www.raketamedia.com/Sochi-2014-Video-Projections', name: 'Raketamedia', tags: ['Visuals'] },
-        ];
-
-        // STATE
-        let studios = [...masterStudios];
-        let selectedTags = [];
-        let searchTerm = "";
-        let sortBy = "alpha"; // INITIAL SORT SET TO ALPHABETICAL
-        let editingId = null;
-
-        // ELEMENT REFERENCES
-        const grid = document.getElementById('studioGrid');
-        const searchInput = document.getElementById('searchInput');
-        const clearSearchBtn = document.getElementById('clearSearch');
-        const sortSelect = document.getElementById('sortSelect');
-        const filterToggle = document.getElementById('filterToggle');
-        const filterMenu = document.getElementById('filterMenu');
-        const tagList = document.getElementById('tagList');
-        const emptyState = document.getElementById('emptyState');
-        const resultCountText = document.getElementById('resultCount');
-
-        // INITIALIZE
-        function init() {
-            render();
-            setupEventListeners();
-        }
-
-        function setupEventListeners() {
-            // Search logic
-            searchInput.addEventListener('input', (e) => {
-                searchTerm = e.target.value;
-                clearSearchBtn.classList.toggle('hidden', !searchTerm);
-                render();
-            });
-
-            clearSearchBtn.addEventListener('click', () => {
-                searchTerm = "";
-                searchInput.value = "";
-                clearSearchBtn.classList.add('hidden');
-                render();
-            });
-
-            // Sorting logic
-            sortSelect.addEventListener('change', (e) => {
-                sortBy = e.target.value;
-                render();
-            });
-
-            // Category Dropdown logic
-            filterToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                filterMenu.classList.toggle('hidden');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!filterMenu.contains(e.target) && e.target !== filterToggle) {
-                    filterMenu.classList.add('hidden');
-                }
-            });
-
-            // Add Studio logic
-            document.getElementById('addStudioBtn').addEventListener('click', () => {
-                const nameInp = document.getElementById('newStudioName');
-                const urlInp = document.getElementById('newStudioUrl');
-                if (!urlInp.value) return;
-
-                const newStudio = {
-                    id: Date.now(),
-                    name: nameInp.value || urlInp.value.split('//')[1]?.split('.')[0] || 'Studio',
-                    url: urlInp.value.startsWith('http') ? urlInp.value : `https://${urlInp.value}`,
-                    tags: ['Added Source']
-                };
-
-                masterStudios.unshift(newStudio);
-                studios = [...masterStudios];
-                nameInp.value = "";
-                urlInp.value = "";
-                render();
-            });
-        }
-
-        function getFavicon(url) {
-            try {
-                const domain = new URL(url).hostname;
-                return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-            } catch (e) { return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="; }
-        }
-
-        // MAIN RENDER ENGINE
-        function render() {
-            // FILTER & SORT
-            let filtered = studios.filter(s => {
-                const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                     s.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                     s.tags.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()));
-                const matchesTags = selectedTags.length === 0 || selectedTags.some(t => s.tags.includes(t));
-                return matchesSearch && matchesTags;
-            });
-
-            if (sortBy === 'alpha') {
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
-            } else {
-                filtered.sort((a, b) => b.id - a.id);
-            }
-
-            // INJECT CARDS
-            grid.innerHTML = "";
-            filtered.forEach(studio => {
-                const isEditing = editingId === studio.id;
-                const card = document.createElement('div');
-                card.className = "group relative bg-white rounded-[32px] p-6 border border-stone-100 shadow-sm hover:shadow-2xl card-hover transition-all duration-500 flex flex-col justify-between overflow-hidden min-h-[250px]";
-                
-                if (isEditing) {
-                    card.innerHTML = `
-                        <div class="relative z-10 space-y-3 h-full flex flex-col justify-between">
-                            <div class="space-y-2">
-                                <input id="editName" class="w-full bg-stone-50 p-2 rounded-lg text-sm font-bold border border-stone-200 focus:ring-1 ring-custom-blue outline-none" value="${studio.name}">
-                                <input id="editUrl" class="w-full bg-stone-50 p-2 rounded-lg text-xs border border-stone-200 focus:ring-1 ring-custom-blue outline-none" value="${studio.url}">
-                                <textarea id="editTags" class="w-full bg-stone-50 p-2 rounded-lg text-xs border border-stone-200 h-20 resize-none font-medium outline-none">${studio.tags.join(', ')}</textarea>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="saveEdit(${studio.id})" class="flex-1 bg-custom-blue text-white py-2 rounded-xl text-xs font-bold shadow-lg shadow-blue-100 hover-bg-custom-blue transition-colors">Save</button>
-                                <button onclick="cancelEdit()" class="flex-1 bg-stone-100 text-stone-500 py-2 rounded-xl text-xs font-bold hover:bg-stone-200 transition-colors">Cancel</button>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    const tagHtml = studio.tags.map(t => `<span class="px-2.5 py-1 rounded-lg bg-stone-50 text-[10px] font-black text-stone-400 uppercase tracking-widest group-hover:bg-white group-hover:text-custom-blue transition-colors shadow-sm border border-stone-100/50">${t}</span>`).join('');
-                    
-                    card.innerHTML = `
-                        <a href="${studio.url}" target="_blank" class="no-underline h-full flex flex-col justify-between">
-                            <div class="absolute inset-0 bg-gradient-to-br from-[#0C75DD]/0 to-[#0C75DD]/0 group-hover:from-[#0C75DD]/10 group-hover:to-[#0C75DD]/20 transition-colors duration-500"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-8">
-                                    <div class="w-14 h-14 rounded-2xl bg-white flex items-center justify-center overflow-hidden border border-stone-100 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all duration-500">
-                                        <img src="${getFavicon(studio.url)}" class="w-8 h-8 object-contain">
-                                    </div>
-                                    <div class="flex gap-1 items-center">
-                                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-custom-blue transform translate-x-2 group-hover:translate-x-0">
-                                            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
-                                        </div>
-                                        <button onclick="event.preventDefault(); startEdit(${studio.id})" class="text-stone-300 hover:text-custom-blue p-1.5 relative z-20 transition-all hover:scale-110" title="Edit Studio">
-                                            <i data-lucide="pencil" class="w-4 h-4"></i>
-                                        </button>
-                                        <button onclick="event.preventDefault(); deleteStudio(${studio.id})" class="text-stone-300 hover:text-red-500 p-1.5 relative z-20 transition-all hover:scale-110" title="Remove from vault">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <h3 class="text-xl font-bold text-stone-900 mb-1 group-hover:text-custom-blue transition-colors line-clamp-2 leading-tight tracking-tight">${studio.name}</h3>
-                                <div class="flex flex-wrap gap-1.5 mt-4">${tagHtml}</div>
-                            </div>
-                            <div class="mt-8 relative z-10 pt-4 border-t border-stone-50">
-                                <p class="text-[10px] text-stone-300 font-bold truncate group-hover:text-stone-400 transition-colors uppercase tracking-[0.1em]">${studio.url.replace('https://', '').replace('http://', '').replace('www.', '').split('/')[0]}</p>
-                            </div>
-                        </a>
-                    `;
-                }
-                grid.appendChild(card);
-            });
-
-            // REFRESH ICONS
-            lucide.createIcons();
-
-            // UPDATE UI STATE
-            emptyState.classList.toggle('hidden', filtered.length > 0);
-            resultCountText.innerText = `${filtered.length} studios saved`;
-            renderTagList();
-        }
-
-        function renderTagList() {
-            const tags = Array.from(new Set(studios.flatMap(s => s.tags))).sort();
-            tagList.innerHTML = "";
-            tags.forEach(tag => {
-                const isSelected = selectedTags.includes(tag);
-                const btn = document.createElement('button');
-                btn.className = `flex items-center justify-between px-3 py-2 rounded-lg text-left text-xs font-bold transition-colors ${isSelected ? 'bg-[#0C75DD]/10 text-custom-blue' : 'text-stone-600 hover:bg-stone-50'}`;
-                btn.innerHTML = `<span>${tag}</span>${isSelected ? '<i data-lucide="check" class="w-3.5 h-3.5"></i>' : ''}`;
-                btn.onclick = () => {
-                    if (isSelected) selectedTags = selectedTags.filter(t => t !== tag);
-                    else selectedTags.push(tag);
-                    render();
-                };
-                tagList.appendChild(btn);
-            });
-            lucide.createIcons();
-
-            const toggleBtn = document.getElementById('filterToggle');
-            const label = document.getElementById('filterLabel');
-            if (selectedTags.length > 0) {
-                toggleBtn.classList.add('text-custom-blue', 'border-custom-blue', 'ring-2', 'ring-custom-blue');
-                label.innerText = `Categories (${selectedTags.length})`;
-            } else {
-                toggleBtn.classList.remove('text-custom-blue', 'border-custom-blue', 'ring-2', 'ring-custom-blue');
-                label.innerText = "Filter Categories";
-            }
-
-            document.getElementById('clearFilters').onclick = () => { selectedTags = []; render(); };
-        }
-
-        // ACTION HANDLERS
-        window.startEdit = (id) => { editingId = id; render(); };
-        window.cancelEdit = () => { editingId = null; render(); };
-        window.saveEdit = (id) => {
-            const name = document.getElementById('editName').value;
-            const url = document.getElementById('editUrl').value;
-            const tags = document.getElementById('editTags').value.split(',').map(t => t.trim()).filter(t => t);
-            masterStudios = masterStudios.map(s => s.id === id ? {...s, name, url, tags} : s);
-            studios = [...masterStudios];
-            editingId = null;
-            render();
-        };
-        window.deleteStudio = (id) => {
-            masterStudios = masterStudios.filter(s => s.id !== id);
-            studios = [...masterStudios];
-            render();
-        };
-
-        // BOOT
-        init();
-
-    </script>
-    
-</body>
+  <script src="./studios.js" type="module"></script>
+  <script src="./firebase.js" type="module"></script>
+  <script src="./application.js" type="module"></script>
 </html>

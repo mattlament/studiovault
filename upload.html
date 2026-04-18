@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload Studios — One-Time Script</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-stone-50 p-10 font-mono text-stone-800">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-2xl font-black mb-1">Upload Studios to Firebase</h1>
+      <p class="text-stone-400 text-sm mb-8">
+        One-time seed script. Uploads all studios from studios.js to Firestore
+        using a single batch write.
+      </p>
+
+      <div id="status" class="text-sm font-bold mb-3 text-stone-500"></div>
+      <div
+        id="log"
+        class="bg-white border border-stone-200 rounded-xl p-4 h-72 overflow-y-auto text-xs space-y-0.5 mb-6"
+      ></div>
+
+      <div class="flex gap-3">
+        <button
+          id="uploadBtn"
+          class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-50"
+        >
+          Upload All Studios
+        </button>
+        <button
+          id="clearBtn"
+          class="hidden bg-red-100 text-red-600 px-6 py-3 rounded-xl font-bold hover:bg-red-200 transition-colors disabled:opacity-50"
+        >
+          Clear All from Firebase
+        </button>
+      </div>
+    </div>
+
+    <script type="module">
+      import { masterStudios } from "./studios.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        writeBatch,
+        getDocs,
+        doc,
+      } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyC-qUsW2JmjDkcLfB1W7kT-jQtxFi6VfEk",
+        authDomain: "matt-vault-app.firebaseapp.com",
+        projectId: "matt-vault-app",
+        storageBucket: "matt-vault-app.firebasestorage.app",
+        messagingSenderId: "435451171052",
+        appId: "1:435451171052:web:9643b9194436f8691f95c9",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const linksCol = collection(db, "userLinks");
+
+      const logEl = document.getElementById("log");
+      const statusEl = document.getElementById("status");
+      const uploadBtn = document.getElementById("uploadBtn");
+      const clearBtn = document.getElementById("clearBtn");
+
+      function addLog(msg, color = "text-stone-500") {
+        const line = document.createElement("p");
+        line.className = color;
+        line.textContent = msg;
+        logEl.appendChild(line);
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      uploadBtn.addEventListener("click", async () => {
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = "Uploading…";
+        logEl.innerHTML = "";
+        statusEl.textContent = `Queuing ${masterStudios.length} studios…`;
+
+        try {
+          const batch = writeBatch(db);
+          for (const studio of masterStudios) {
+            const ref = doc(linksCol);
+            batch.set(ref, {
+              id: studio.id,
+              title: studio.title,
+              url: studio.url,
+              tags: studio.tags,
+            });
+            addLog(`+ ${studio.title}`);
+          }
+
+          statusEl.textContent = "Committing batch…";
+          await batch.commit();
+
+          addLog(
+            `✓ Uploaded ${masterStudios.length} studios successfully.`,
+            "text-green-600 font-bold",
+          );
+          statusEl.textContent = `Done — ${masterStudios.length} studios uploaded.`;
+          clearBtn.classList.remove("hidden");
+        } catch (err) {
+          addLog(`✗ ${err.message}`, "text-red-600 font-bold");
+          statusEl.textContent = "Upload failed.";
+        }
+
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "Upload All Studios";
+      });
+
+      clearBtn.addEventListener("click", async () => {
+        if (
+          !confirm(
+            "Delete ALL studios from Firebase? This cannot be undone.",
+          )
+        )
+          return;
+        clearBtn.disabled = true;
+        clearBtn.textContent = "Clearing…";
+
+        const snapshot = await getDocs(linksCol);
+        const batch = writeBatch(db);
+        snapshot.docs.forEach((d) =>
+          batch.delete(doc(db, "userLinks", d.id)),
+        );
+        await batch.commit();
+
+        addLog(
+          `✓ Deleted ${snapshot.size} documents from Firestore.`,
+          "text-orange-500 font-bold",
+        );
+        clearBtn.classList.add("hidden");
+        clearBtn.disabled = false;
+        clearBtn.textContent = "Clear All from Firebase";
+      });
+    </script>
+  </body>
+</html>
