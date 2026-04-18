@@ -1,8 +1,8 @@
-import { fetchData } from "./firebase.js";
+import { fetchData, addLink, editLink, deleteLink } from "./firebase.js";
 import { masterStudios } from "./studios.js";
 
 // STATE
-let studios = [...masterStudios];
+let studios = [];
 let selectedTags = [];
 let searchTerm = "";
 let sortBy = "alpha"; // INITIAL SORT SET TO ALPHABETICAL
@@ -63,27 +63,26 @@ function setupEventListeners() {
   });
 
   // Add Studio logic
-  document.getElementById("addStudioBtn").addEventListener("click", () => {
-    const nameInp = document.getElementById("newStudioName");
-    const urlInp = document.getElementById("newStudioUrl");
-    if (!urlInp.value) return;
+  document
+    .getElementById("addStudioBtn")
+    .addEventListener("click", async () => {
+      const nameInp = document.getElementById("newStudioName");
+      const urlInp = document.getElementById("newStudioUrl");
+      if (!urlInp.value) return;
 
-    const newStudio = {
-      id: Date.now(),
-      title:
-        nameInp.value || urlInp.value.split("//")[1]?.split(".")[0] || "Studio",
-      url: urlInp.value.startsWith("http")
+      const title =
+        nameInp.value || urlInp.value.split("//")[1]?.split(".")[0] || "Studio";
+      const url = urlInp.value.startsWith("http")
         ? urlInp.value
-        : `https://${urlInp.value}`,
-      tags: ["Added Source"],
-    };
+        : `https://${urlInp.value}`;
+      const tags = ["Added Source"];
 
-    masterStudios.unshift(newStudio);
-    studios = [...masterStudios];
-    nameInp.value = "";
-    urlInp.value = "";
-    render();
-  });
+      const firestoreId = await addLink(title, url, tags);
+      studios.unshift({ id: Date.now(), firestoreId, title, url, tags });
+      nameInp.value = "";
+      urlInp.value = "";
+      render();
+    });
 }
 
 function getFavicon(url) {
@@ -237,24 +236,28 @@ window.cancelEdit = () => {
   editingId = null;
   render();
 };
-window.saveEdit = (id) => {
-  const name = document.getElementById("editName").value;
+window.saveEdit = async (id) => {
+  const title = document.getElementById("editName").value;
   const url = document.getElementById("editUrl").value;
   const tags = document
     .getElementById("editTags")
     .value.split(",")
     .map((t) => t.trim())
     .filter((t) => t);
-  masterStudios = masterStudios.map((s) =>
-    s.id === id ? { ...s, title: name, url, tags } : s,
-  );
-  studios = [...masterStudios];
+  const studio = studios.find((s) => s.id === id);
+  if (studio?.firestoreId) {
+    await editLink(studio.firestoreId, title, url, tags);
+  }
+  studios = studios.map((s) => (s.id === id ? { ...s, title, url, tags } : s));
   editingId = null;
   render();
 };
-window.deleteStudio = (id) => {
-  masterStudios = masterStudios.filter((s) => s.id !== id);
-  studios = [...masterStudios];
+window.deleteStudio = async (id) => {
+  const studio = studios.find((s) => s.id === id);
+  if (studio?.firestoreId) {
+    await deleteLink(studio.firestoreId);
+  }
+  studios = studios.filter((s) => s.id !== id);
   render();
 };
 
