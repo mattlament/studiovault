@@ -6,7 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-stone-50 p-10 font-mono text-stone-800">
-    <div class="max-w-2xl mx-auto">
+    <div id="content" class="max-w-2xl mx-auto hidden">
       <h1 class="text-2xl font-black mb-1">Upload Studios to Firebase</h1>
       <p class="text-stone-400 text-sm mb-8">
         One-time seed script. Uploads all studios from studios.js to Firestore
@@ -36,7 +36,7 @@
     </div>
 
     <script type="module">
-      import { masterStudios } from "./studios.js";
+      import { masterStudios } from "../js/studios.js";
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
       import {
         getFirestore,
@@ -45,6 +45,10 @@
         getDocs,
         doc,
       } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyC-qUsW2JmjDkcLfB1W7kT-jQtxFi6VfEk",
@@ -57,6 +61,15 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          window.location.href = "./login.html";
+        } else {
+          document.getElementById("content").classList.remove("hidden");
+        }
+      });
       const linksCol = collection(db, "userLinks");
 
       const logEl = document.getElementById("log");
